@@ -4,7 +4,7 @@
 #include "framework.h"
 #include "register-monitor.h"
 #include <iostream>
-
+#include <string>
 #define MAX_LOADSTRING 100
 
 extern "C" {
@@ -58,11 +58,9 @@ void readRegistersNew() {
     currEsp = getEspR();
 }
 
-void validate(HWND hWnd) {
+void validate() {
     readRegistersNew();
     WCHAR buffer[64] = {};  // Adjust size as needed
-    readRegistersNew();
-
 
     if (currEax != oldEax) {
         swprintf_s(buffer, L"Eax changed from %08X to %08X\n", oldEax, currEax);
@@ -253,14 +251,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_PAINT:
         {
-        validate(hWnd);
+        validate();
 
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             RECT rect;
             GetClientRect(hWnd, &rect);
             int y = 10;
-            WCHAR textBuffer[64]= {};    
+            WCHAR textBuffer[256]= {};    
             SYSTEMTIME st, lt;
 
             GetSystemTime(&st);
@@ -269,35 +267,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             rect.top = y;
             DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
             y+=20;
-            swprintf_s(textBuffer, L"EAX: %08X", oldEax);
+            swprintf_s(textBuffer, L"Register value, String value, Char value");
             rect.top = y;
 		    DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
             y+=20;
-            swprintf_s(textBuffer, L"EBX: %08X", oldEbx);
+            swprintf_s(textBuffer, L"EAX: %08X, %s, %c", oldEax, std::to_wstring(oldEax), std::to_wstring(oldEax).c_str());
+            rect.top = y;
+		    DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
+            y+=20;
+            swprintf_s(textBuffer, L"EBX: %08X, %s, %c", oldEbx, std::to_wstring(oldEbx), std::to_wstring(oldEbx).c_str());
             rect.top = y;
             DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
             y+=20;
-            swprintf_s(textBuffer, L"ECX: %08X", oldEcx);
+            swprintf_s(textBuffer, L"ECX: %08X, %s, %c", oldEcx, std::to_wstring(oldEcx), std::to_wstring(oldEcx).c_str());
             rect.top = y;
             DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
             y+=20;
-            swprintf_s(textBuffer, L"EDX: %08X", oldEdx);
+            swprintf_s(textBuffer, L"EDX: %08X, %s, %c", oldEdx, std::to_wstring(oldEdx), std::to_wstring(oldEdx).c_str());
             rect.top = y;
             DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
             y+=20;
-            swprintf_s(textBuffer, L"ESI: %08X", oldEsi);
+            swprintf_s(textBuffer, L"ESI: %08X, %s, %c", oldEsi, std::to_wstring(oldEsi), std::to_wstring(oldEsi).c_str());
             rect.top = y;
             DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
             y+=20;
-            swprintf_s(textBuffer, L"EDI: %08X", oldEdi);
+            swprintf_s(textBuffer, L"EDI: %08X, %s, %c", oldEdi, std::to_wstring(oldEdi), std::to_wstring(oldEdi).c_str());
             rect.top = y;
             DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
             y+=20;
-            swprintf_s(textBuffer, L"EBP: %08X", oldEbp);
+            swprintf_s(textBuffer, L"EBP: %08X, %s, %c", oldEbp, std::to_wstring(oldEbp), std::to_wstring(oldEbp).c_str());
             rect.top = y;
             DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
             y+=20;
-            swprintf_s(textBuffer, L"ESP: %08X", oldEsp);
+            swprintf_s(textBuffer, L"ESP: %08X, %s, %c", oldEsp, std::to_wstring(oldEsp), std::to_wstring(oldEsp).c_str());
             rect.top = y;
             DrawText(hdc, textBuffer, -1, &rect, DT_LEFT | DT_TOP);
 
